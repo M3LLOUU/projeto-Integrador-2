@@ -1,0 +1,17 @@
+{
+  "name": "projeto-integrador-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jaime de Mello",
+  "license": "ISC",
+  "dependencies": {
+    "@inquirer/prompts": "^7.8.6",
+    "inquirer": "^12.9.6"
+  },
+  "devDependencies": {}
+}

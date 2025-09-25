@@ -1,4 +1,9 @@
 const { input, select, checkbox } = require('@inquirer/prompts');
+const fs = require ('fs');
+
+
+
+
 
 let metas =[];
 
@@ -20,6 +25,9 @@ async function mostrarMenu() {
             { name: "📝 Adicionar Meta", value: "adicionar" },
             { name: "🗒️  Mostrar Metas", value: "mostrar" },
             { name: "✅ Marcar metas como realizadas", value: "marcar"},
+            { name: "🏆 Metas Realizadas", value:"realizadas"},
+            { name: "📓 Metas não realizadas", value:"abertas"},
+            { name: "✖️  Deletar Metas", value: "metas"},
             { name: "❌ Sair", value: "sair" }
         ]
     });
@@ -37,6 +45,15 @@ async function executarAcao(opcao) {
             break;
         case "marcar":
             await marcarMetas();
+            break;
+        case "abertas":
+            await metasAbertas();
+            break;
+        case "realizadas":
+            await metasRealizadas();
+            break;
+        case "metas":
+            await deletarMetas();
             break;
         case "sair":
             break;
@@ -109,7 +126,7 @@ async function marcarMetas(){
         choices: metas.map (meta => 
         ({ name: meta.value,
             value: meta.value,
-            checked: meta.value
+            checked: meta.checked
         })),
     })
 
@@ -139,6 +156,51 @@ async function metasRealizadas(){
 
     mostrarMensagem(`Total de metas realizadas: ${realizadas.length} metas! 🎆`);
 }
+
+async function metasAbertas(){
+    const abertas = metas.filter(meta => !meta.checked);
+
+    if (abertas.length === 0) {
+        mostrarMensagem("Não existem metas abertas!");
+        return;
+    }
+        console.log("Metas abertas:");
+        abertas.forEach((meta, index) => {
+            console.log(`${index + 1 }. ${meta.value}`);
+        });
+
+        mostrarMensagem(`Você ainda tem ${abertas.length} metas para concluir. Vamos lá!`);
+}
+
+async function deletarMetas() {
+    
+    if (metas.length === 0){
+        mostrarMensagem(" Não existem metas cadastradas!");
+        return;
+    }
+
+    const metasParaDeletar = await checkbox({ // gera o menu para selecionar e deletar metas
+        message: "Selecione as metas que você deseja deletar:",
+        choices: metas.map (meta => 
+        ({ name: meta.value,
+            value: meta.value,
+            checked: false
+        })),
+    })
+
+    if (metasParaDeletar.length === 0) {
+        mostrarMensagem("❗Nenhuma meta selecionada para deletar")
+        return;
+    }
+
+    metasParaDeletar.forEach(metasParaDeletar => {
+        metas = metas.filter(meta => meta.value !== metasParaDeletar);
+    })
+
+    mostrarMensagem("Meta(s) deletada(s)!")
+
+}
+
 
 iniciar();
 

@@ -1,10 +1,8 @@
 const { input, select, checkbox } = require('@inquirer/prompts');
 
-console.log("Bem-Vindo ao sistema de metas pessoais!");
-
 let metas =[];
 
-function limapTela() {
+function limpaTela() {
 
     console.clear();
 }
@@ -41,8 +39,7 @@ async function executarAcao(opcao) {
             await marcarMetas();
             break;
         case "sair":
-            console.log("Saindo do sistema. Até mais!");
-            process.exit(0);
+            break;
         default:
             console.log("Opção inválida. Tente novamente.");
     }
@@ -50,7 +47,7 @@ async function executarAcao(opcao) {
 
 async function iniciar() {
 
-    limapTela();
+    limpaTela();
     mostrarMensagem("=== Sistema de Metas Pessoais ===");
 
     while (true) {
@@ -58,7 +55,7 @@ async function iniciar() {
         
         if (opcao === "sair") {
             await executarAcao(opcao);
-            limparTela();
+            limpaTela();
             mostrarMensagem("Até mais! 👋");
             break;
     }
@@ -69,7 +66,7 @@ async function iniciar() {
 async function adicionarMeta() {
 
     const descricao = await input({
-        message: "Digite sua nova meta pessoal:"
+        message: "📝 Digite sua nova meta pessoal:"
     });
 
     if (descricao.length === 0) {
@@ -93,7 +90,7 @@ async function mostrarMetas() {
         return;
     }
 
-    console.log("Suas Metas Pessoais:");
+    console.log("📖 Suas Metas Pessoais:");
     metas.forEach((meta, index) => {
         const status = meta.checked ? "[x]" : "[ ]";
         console.log(`${status} ${index + 1}. ${meta.value}`);
@@ -116,6 +113,8 @@ async function marcarMetas(){
         })),
     })
 
+    metas.forEach(meta => meta.checked = false);
+
     metasSelecionadas.forEach(metasSelecionadas => {
         const meta = metas.find(m => m.value === metasSelecionadas)
         if (meta) {
@@ -124,6 +123,23 @@ async function marcarMetas(){
     });
     mostrarMensagem(" ✅ Metas atualizadas com sucesso!");
 }
+
+async function metasRealizadas(){
+    const realizadas = metas.filter(meta => meta.checked);
+
+    if (realizadas.length === 0) {
+        mostrarMensagem("🔻 Nenhuma meta foi realizada ainda! 🔻");
+        return;
+    }
+
+    console.log("🏆 Metas Realizadas:");
+    realizadas.forEach((meta, index) => {
+        console.log(`[x] ${index + 1}. ${meta.value}`);
+    });
+
+    mostrarMensagem(`Total de metas realizadas: ${realizadas.length} metas! 🎆`);
+}
+
 iniciar();
 
 

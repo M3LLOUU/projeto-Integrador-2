@@ -12,13 +12,22 @@ async function salvarMetas() {
     }
 }
 
-function limpaTela() {
+async function carregarMetas() {
+    try {
+        const dados = await fs.readFileSync('metas.json', 'utf-8');
+        metas = JSON.parse(dados);
+        console.log('Metas carregadas com sucesso!');
+    }
+    catch (error) {
+        console.log('Erro ao carregar metas:', error.message);
+    }
+}
 
+function limpaTela() {
     console.clear();
 }
 
 function mostrarMensagem(mensagem) {
-
     console.log(`\n${mensagem}\n`);
 }
 
